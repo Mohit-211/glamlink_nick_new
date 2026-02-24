@@ -52,6 +52,7 @@ export type PageType =
   | 'for-clients'
   | 'home'
   | 'about'
+  | 'journal'
   | 'services'
   | 'contact'
   | 'for-professionals'
