@@ -27,7 +27,7 @@ export function HomePageWrapper({ pageType, initialData }: HomePageWrapperProps)
     >
       <UserDownloadDialog
         isOpen={showDownloadDialog}
-        onClose={() => setShowDownloadDialog(false)}
+        onClose={() => setShowDownloadDialog(true)}
       />
     </ClientWrapper>
   );

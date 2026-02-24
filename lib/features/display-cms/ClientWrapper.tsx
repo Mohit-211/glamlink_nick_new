@@ -197,11 +197,13 @@ export function ClientWrapper({
     }
 
     const loadContent = async () => {
+      console.log("true bhavya")
       try {
         setIsLoading(true);
         setError(null);
 
         const data = await fetchPageContent(pageType);
+        console.log(data,"data======>")
         setConfig(data);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load content';
