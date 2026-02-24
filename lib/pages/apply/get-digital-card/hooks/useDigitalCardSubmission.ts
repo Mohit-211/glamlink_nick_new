@@ -58,7 +58,7 @@ export const useDigitalCardSubmission = () => {
         throw new Error(`Submission data is too large for Firestore. ${validation.errors.join(', ')}`);
       }
 
-      const response = await fetch('/api/apply/digital-card/submit', {
+      const response = await fetch('https://node.glamlink.net:5000/api/v1/businessCard', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

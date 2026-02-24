@@ -1,215 +1,159 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { DigitalCardFormData } from '../types';
-import { fields_layout } from '../config/fields';
-import { TextField, EmailField, TiptapField, PhoneField, SelectField } from '@/lib/pages/apply/shared/components/fields';
+import { useState } from 'react';
+import type { DigitalCardFormData, Location, BusinessHour } from '../types';
 
 interface DigitalCardFormProps {
-  onSubmit: (data: DigitalCardFormData) => Promise<void>;
   isLoading?: boolean;
 }
 
-export default function DigitalCardForm({ onSubmit, isLoading = false }: DigitalCardFormProps) {
-  const [formData, setFormData] = useState<DigitalCardFormData>({
-    name: '',
-    title: '',
-    specialty: '',
-    bio: '',
-    profileImage: null,
-    phone: '',
-    email: '',
-    applicationType: 'digital-card',
-    locations: [],
-    businessHours: [],
-    specialties: []
-  });
+export default function DigitalCardForm({ isLoading = false }: DigitalCardFormProps) {
+ const [formData, setFormData] = useState<DigitalCardFormData>({
+  name: '',
+  professional_title: '',
+  business_name: '',
+  profession: '',
+  email: '',
+  phone: '',
+  bio: '',
+  profileImage: undefined, // ✅ add this
+  profile_image: undefined, // keep if you use for file input
+  images: [],
+  gallery_meta: [],
+  locations: [],
+  business_hour: [],
+  primary_specialty: '',
+  specialties: [],
+  custom_handle: '',
+  website: '',
+  social_media: {
+    instagram: '',
+    tiktok: '',
+    facebook: '',
+    youtube: '',
+  },
+  preferred_booking_method: '',
+  booking_link: '',
+  important_info: [],
+  offer_promotion: false,
+  promotion_details: '',
+  excites_about_glamlink: [],
+  biggest_pain_points: [],
+  elite_setup: false,
+});
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFieldChange = useCallback((fieldKey: string, value: any) => {
-    setFormData(prev => ({ ...prev, [fieldKey]: value }));
-    // Clear error when field is updated
-    if (errors[fieldKey]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[fieldKey];
-        return newErrors;
-      });
-    }
-  }, [errors]);
+  /* ================= FIELD HANDLERS ================= */
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    const profile = fields_layout.profile;
+  const handleChange = <K extends keyof DigitalCardFormData>(
+    key: K,
+    value: DigitalCardFormData[K]
+  ) => setFormData(prev => ({ ...prev, [key]: value }));
 
-    // Validate required fields
-    Object.entries(profile).forEach(([key, config]) => {
-      if (config.required && !formData[key as keyof DigitalCardFormData]) {
-        newErrors[key] = `${config.label} is required`;
-      }
-    });
+  const handleSocialChange = <K extends keyof DigitalCardFormData['social_media']>(
+    key: K,
+    value: string
+  ) => setFormData(prev => ({
+    ...prev,
+    social_media: { ...prev.social_media, [key]: value },
+  }));
 
-    // Validate email format
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
+  const handleAddLocation = (location: Location) =>
+    setFormData(prev => ({ ...prev, locations: [...prev.locations, location] }));
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const handleAddBusinessHour = (hour: BusinessHour) =>
+    setFormData(prev => ({ ...prev, business_hour: [...prev.business_hour, hour] }));
+
+  const handleAddImage = (file: File) =>
+    setFormData(prev => ({ ...prev, images: [...prev.images, file] }));
+
+  /* ================= SUBMIT ================= */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (isSubmitting || isLoading) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
     setIsSubmitting(true);
-
     try {
-      await onSubmit(formData);
-    } catch (error) {
-      console.error('Form submission error:', error);
+      const apiFormData = new FormData();
+
+      // Basic fields
+      ['name', 'professional_title', 'business_name', 'profession', 'email', 'phone', 'bio', 'primary_specialty', 'custom_handle', 'website', 'preferred_booking_method', 'booking_link', 'promotion_details'].forEach(field => {
+        apiFormData.append(field, (formData as any)[field] || '');
+      });
+
+      // Boolean fields
+      apiFormData.append('offer_promotion', String(formData.offer_promotion));
+      apiFormData.append('elite_setup', String(formData.elite_setup));
+
+      // JSON fields
+      apiFormData.append('social_media', JSON.stringify(formData.social_media));
+      apiFormData.append('specialties', JSON.stringify(formData.specialties));
+      apiFormData.append('important_info', JSON.stringify(formData.important_info));
+      apiFormData.append('locations', JSON.stringify(formData.locations));
+      apiFormData.append('business_hour', JSON.stringify(formData.business_hour));
+      apiFormData.append('gallery_meta', JSON.stringify(formData.gallery_meta));
+      apiFormData.append('excites_about_glamlink', JSON.stringify(formData.excites_about_glamlink));
+      apiFormData.append('biggest_pain_points', JSON.stringify(formData.biggest_pain_points));
+
+      // Files
+      if (formData.profile_image) apiFormData.append('profile_image', formData.profile_image);
+      formData.images.forEach(file => apiFormData.append('images', file));
+
+      const response = await fetch('https://node.glamlink.net:5000/api/v1/businessCard', {
+        method: 'POST',
+        body: apiFormData,
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Submission failed');
+      }
+
+      const result = await response.json();
+      console.log('SUCCESS:', result);
+      alert('Application submitted successfully!');
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Submission failed.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  /* ================= UI ================= */
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Professional Information */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            Professional Information
-          </h3>
-          <p className="text-gray-600">
-            Tell us about yourself and your business
-          </p>
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <TextField
-            fieldKey="name"
-            config={fields_layout.profile.name}
-            value={formData.name}
-            onChange={handleFieldChange}
-            error={errors.name}
-            disabled={isLoading || isSubmitting}
-          />
+      {/* BASIC INFO */}
+      <input type="text" placeholder="Name" value={formData.name} onChange={e => handleChange('name', e.target.value)} />
+      <input type="text" placeholder="Professional Title" value={formData.professional_title} onChange={e => handleChange('professional_title', e.target.value)} />
+      <input type="text" placeholder="Business Name" value={formData.business_name} onChange={e => handleChange('business_name', e.target.value)} />
+      <input type="text" placeholder="Profession" value={formData.profession} onChange={e => handleChange('profession', e.target.value)} />
+      <input type="email" placeholder="Email" value={formData.email} onChange={e => handleChange('email', e.target.value)} />
+      <input type="tel" placeholder="Phone" value={formData.phone} onChange={e => handleChange('phone', e.target.value)} />
+      <textarea placeholder="Bio" value={formData.bio} onChange={e => handleChange('bio', e.target.value)} />
 
-          <TextField
-            fieldKey="title"
-            config={fields_layout.profile.title}
-            value={formData.title}
-            onChange={handleFieldChange}
-            error={errors.title}
-            disabled={isLoading || isSubmitting}
-          />
+      {/* SOCIAL MEDIA */}
+      {(['instagram', 'tiktok', 'facebook', 'youtube'] as const).map((key) => (
+        <input
+          key={key}
+          type="text"
+          placeholder={key}
+          value={formData.social_media[key]}
+          onChange={e => handleSocialChange(key, e.target.value)}
+        />
+      ))}
 
-          <EmailField
-            fieldKey="email"
-            config={fields_layout.profile.email}
-            value={formData.email}
-            onChange={handleFieldChange}
-            error={errors.email}
-            disabled={isLoading || isSubmitting}
-          />
+      {/* FILES */}
+      <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleChange('profile_image', e.target.files[0])} />
+      <input type="file" accept="image/*" multiple onChange={e => e.target.files && Array.from(e.target.files).forEach(f => handleAddImage(f))} />
 
-          <PhoneField
-            fieldKey="phone"
-            config={fields_layout.profile.phone}
-            value={formData.phone}
-            onChange={handleFieldChange}
-            error={errors.phone}
-            disabled={isLoading || isSubmitting}
-          />
-
-          <TextField
-            fieldKey="businessName"
-            config={fields_layout.profile.businessName}
-            value={formData.businessName || ''}
-            onChange={handleFieldChange}
-            error={errors.businessName}
-            disabled={isLoading || isSubmitting}
-          />
-
-          <SelectField
-            fieldKey="specialty"
-            config={fields_layout.profile.specialty}
-            value={formData.specialty}
-            onChange={handleFieldChange}
-            error={errors.specialty}
-            disabled={isLoading || isSubmitting}
-            options={fields_layout.profile.specialty.options}
-          />
-        </div>
-
-        <div className="mt-6">
-          <TiptapField
-            fieldKey="bio"
-            config={fields_layout.profile.bio}
-            value={formData.bio}
-            onChange={handleFieldChange}
-            error={errors.bio}
-            disabled={isLoading || isSubmitting}
-          />
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <TextField
-            fieldKey="website"
-            config={fields_layout.profile.website}
-            value={formData.website || ''}
-            onChange={handleFieldChange}
-            error={errors.website}
-            disabled={isLoading || isSubmitting}
-          />
-
-          <TextField
-            fieldKey="instagram"
-            config={fields_layout.profile.instagram}
-            value={formData.instagram || ''}
-            onChange={handleFieldChange}
-            error={errors.instagram}
-            disabled={isLoading || isSubmitting}
-          />
-        </div>
-
-        <div className="mt-6">
-          <TextField
-            fieldKey="bookingUrl"
-            config={fields_layout.profile.bookingUrl}
-            value={formData.bookingUrl || ''}
-            onChange={handleFieldChange}
-            error={errors.bookingUrl}
-            disabled={isLoading || isSubmitting}
-          />
-        </div>
-
-      </div>
-
-      {/* Submit Button */}
-      <div className="flex justify-center pt-6">
-        <button
-          type="submit"
-          disabled={isLoading || isSubmitting}
-          className={`
-            px-8 py-3 font-semibold rounded-full transition-all duration-200
-            ${isLoading || isSubmitting
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-glamlink-teal text-white hover:bg-glamlink-teal-dark shadow-lg hover:shadow-xl transform hover:scale-105'
-            }
-          `}
-        >
-          {isSubmitting ? 'Submitting...' : isLoading ? 'Loading...' : 'Submit Application'}
-        </button>
-      </div>
+      <button type="submit" disabled={isSubmitting || isLoading} className="px-6 py-3 bg-teal-600 text-white rounded">
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
     </form>
   );
 }

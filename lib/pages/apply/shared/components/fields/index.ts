@@ -1,15 +1,26 @@
 // Types
-export interface BaseFieldProps {
-  fieldKey: string;
+// export interface BaseFieldProps {
+//   fieldKey: string;
+//   config: any;
+//   value: any;
+//   onChange: (fieldKey: string, value: any) => void;
+//   onBlur?: (fieldKey: string) => void;
+//   onFocus?: (fieldKey: string) => void;
+//   error?: string;
+//   disabled?: boolean;
+// }
+export interface BaseFieldProps<
+  T extends Record<string, any> = Record<string, any>
+> {
+  fieldKey: keyof T;
   config: any;
-  value: any;
-  onChange: (fieldKey: string, value: any) => void;
-  onBlur?: (fieldKey: string) => void;
-  onFocus?: (fieldKey: string) => void;
+  value: T[keyof T];
+  onChange: <K extends keyof T>(fieldKey: K, value: T[K]) => void;
+  onBlur?: (fieldKey: keyof T) => void;
+  onFocus?: (fieldKey: keyof T) => void;
   error?: string;
   disabled?: boolean;
 }
-
 // Field components exports
 export { default as TextField } from './TextField';
 export { default as TextareaField } from './TextareaField';
