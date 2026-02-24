@@ -6,9 +6,9 @@ import { TextField, MultiCheckboxField, SelectField, CheckboxOptionField, Checkb
 
 interface ProfileInfoFormProps {
   formData: GetFeaturedFormData;
-  handleFieldChange: (fieldKey: string, value: any) => void;
-  handleFieldBlur?: (fieldKey: string) => void;
-  handleFieldFocus?: (fieldKey: string) => void;
+  handleFieldChange: (fieldKey: string | number, value: any) => void;
+  handleFieldBlur?: (fieldKey: string | number) => void;
+  handleFieldFocus?: (fieldKey: string | number) => void;
   errors: Record<string, string>;
   disabled?: boolean;
   profileConfig?: TabConfig;
