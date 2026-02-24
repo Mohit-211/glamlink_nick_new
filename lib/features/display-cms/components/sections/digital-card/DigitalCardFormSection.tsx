@@ -33,10 +33,10 @@ export function DigitalCardFormSection({
 
   return (
     <div id="digital-card-form">
-      <DigitalCardFormWithPreview
+      {/* <DigitalCardFormWithPreview
         onSubmit={onSubmit}
         isLoading={isLoading}
-      />
+      /> */}
     </div>
   );
 }
