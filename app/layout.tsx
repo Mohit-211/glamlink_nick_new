@@ -67,7 +67,7 @@ const redHatDisplay = Red_Hat_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://glamlink.net")),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://test.glamlink.net")),
   title: "Glamlink - The Link to the Future of Beauty",
   description: "Where beauty meets innovation, and possibilities are endless. Your go-to application for the beauty industry.",
   keywords: ["glamlink", "beauty app", "beauty professionals", "beauty industry", "beauty platform", "beauty services"],

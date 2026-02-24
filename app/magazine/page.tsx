@@ -58,7 +58,7 @@ export default async function MagazineListingPage() {
 // Generate metadata for the page
 export async function generateMetadata() {
   // Get base URL for absolute URLs
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://glamlink.net");
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://test.glamlink.net");
   const pageUrl = `${baseUrl}/magazine`;
   const defaultImage = `${baseUrl}/images/glamlink-magazine-cover.jpg`;
 
