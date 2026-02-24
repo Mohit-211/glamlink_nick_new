@@ -1,0 +1,84 @@
+# Glamlink Brand Setup Requirements
+# Fill out this template with your brand information and upload it to quickly populate the questionnaire
+# Format: field_name = value
+# For lists, use comma-separated values
+# For price ranges, use format: min-max
+
+# ===== BRAND OVERVIEW =====
+# Your brand's mission and vision (required)
+brand.vision = To empower everyone to feel confident in their own skin through natural, effective beauty solutions that are accessible and sustainable
+
+# Who are you trying to reach? (required)
+brand.target_audience = Women aged 25-45 who are health-conscious, prefer natural ingredients, and are looking for effective skincare solutions for busy lifestyles
+
+# What makes your brand special? List 3-5 unique selling points (required)
+brand.unique_selling_points = 100% organic ingredients, Cruelty-free certified, Sustainable packaging, Clinically tested formulas, Affordable luxury
+
+# Describe any existing products (optional)
+brand.current_products = We currently offer a line of natural face serums, organic moisturizers, and gentle cleansers made with botanical extracts
+
+# Brands that inspire you or competitors (optional)
+brand.inspiration = Inspired by brands like Glossier, The Ordinary, and Drunk Elephant for their clean formulations and transparent marketing
+
+# ===== PRODUCTS =====
+# Describe your product line (required)
+products.description = Premium skincare line focusing on natural, effective ingredients that deliver visible results without harsh chemicals
+
+# Product categories (comma-separated list, required)
+products.categories = Skincare, Serums, Moisturizers, Cleansers, Treatments, Masks
+
+# Price range in USD (format: min-max, required)
+products.price_range = 25-150
+
+# Key ingredients you want to feature (optional)
+products.ingredients = Hyaluronic acid, Vitamin C, Niacinamide, Retinol alternatives, Natural botanicals, Peptides
+
+# Main benefits your products provide (optional)
+products.benefits = Anti-aging, Deep hydration, Brightening, Acne control, Barrier repair, Even skin tone
+
+# ===== TRAINING PROGRAMS =====
+# What do you want to teach? (required)
+training.goals = Educate beauty professionals on natural skincare techniques, ingredient knowledge, and consultation skills for recommending personalized routines
+
+# Who will take your training? (required)
+training.target_learners = Licensed estheticians, beauty consultants, spa professionals, and skincare enthusiasts looking to go professional
+
+# Types of certifications offered (comma-separated list, required)
+training.certification_types = Basic Natural Skincare Certification, Advanced Ingredient Science, Master Consultation Skills, Product Application Techniques
+
+# Training duration options (optional)
+training.duration = 2-day intensive workshop, 1-week comprehensive course, Monthly masterclasses, Online self-paced modules
+
+# Training price range in USD (format: min-max, optional)
+training.price_range = 299-1999
+
+# ===== BEFORE/AFTER TRANSFORMATIONS =====
+# What results do you promise? (required)
+beforeafter.transformation_goals = Visible improvement in skin texture, tone, and clarity with consistent use of our natural formulations
+
+# Types of treatments you showcase (comma-separated list, required)
+beforeafter.treatment_types = Anti-aging treatment, Acne clearing protocol, Hyperpigmentation therapy, Hydration restoration, Rosacea management
+
+# How long do transformations typically take? (required)
+beforeafter.expected_duration = 4-12 weeks depending on skin concern and consistency of use
+
+# Specific concerns you address (comma-separated list, optional)
+beforeafter.target_concerns = Fine lines, Dark spots, Acne scars, Dullness, Uneven texture, Dehydration, Sensitivity
+
+# ===== CERTIFIED PROVIDERS =====
+# What specialties do your providers need? (comma-separated list, required)
+providers.specialties_needed = Licensed esthetician, Skincare specialist, Holistic beauty practitioner, Medical aesthetician
+
+# Certification levels offered (comma-separated list, required)
+providers.certification_levels = Bronze (Entry), Silver (Intermediate), Gold (Advanced), Platinum (Master)
+
+# Where should providers be located? (required)
+providers.location_preferences = Major metropolitan areas, suburban wellness centers, high-end spas, medical aesthetic clinics
+
+# Minimum experience required (optional)
+providers.experience_level = Minimum 2 years experience in professional skincare, with preference for natural/organic product knowledge
+
+# ===== NOTES =====
+# - All fields marked (required) must be filled for successful upload
+# - Feel free to modify the example values with your own brand information
+# - Save this file as 'requirements.txt' and upload it in the Brand Setup Wizard

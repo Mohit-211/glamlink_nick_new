@@ -1,0 +1,178 @@
+{
+  "id": "home",
+  "banner": {
+    "enabled": false,
+    "message": "Welcome to Glamlink!",
+    "backgroundColor": "#24bbcb",
+    "textColor": "#ffffff",
+    "dismissible": true
+  },
+  "sections": [
+    {
+      "id": "hero-1",
+      "type": "hero",
+      "name": "Hero Section",
+      "order": 1,
+      "visible": true,
+      "content": {
+        "title": "THE PLATFORM POWERING THE BEAUTY INDUSTRY",
+        "subtitle": "Connect. Book. Sell. Grow. Everything beauty, in one seamless experience",
+        "buttons": [
+          {
+            "text": "I'm a Client - Download Now",
+            "action": "download-client",
+            "style": "primary"
+          },
+          {
+            "text": "I'm a Beauty Pro - Grow With Glamlink",
+            "action": "download-pro",
+            "style": "secondary"
+          }
+        ],
+        "phoneImage": "/images/hero pic-website.png"
+      }
+    },
+    {
+      "id": "digital-card-cta-3",
+      "type": "digital-card-cta",
+      "name": "Digital Card CTA",
+      "order": 3,
+      "visible": true,
+      "content": {
+        "title": "The Link in Bio, Evolved.",
+        "description": "Introducing the Glam Card — your sleek, all-in-one digital hub that puts your brand front and center. Showcase your services, share your socials, link your shop, and give clients an instant way to book and connect. Forget messy links — now everything lives in one place.",
+        "subheading": "Powered by Glamlink. Built for the Beauty + Wellness Pro.",
+        "subDescription": "Glamlink is more than a booking app — it's the platform helping beauty entrepreneurs build, grow, and scale their brands. From discovery to checkout, we connect clients with trusted professionals and give pros the tools to run their entire business in one place.",
+        "ctaText": "Apply for Your Glam Card",
+        "ctaLink": "/apply/digital-card",
+        "gifData": {
+          "stillSrc": "/images/digital-card-preview.png",
+          "gifSrc": "/videos/digital-card-demo.mp4",
+          "alt": "Digital Glam Card Preview"
+        }
+      }
+    },
+    {
+      "id": "digital-cards-showcase-4",
+      "type": "digital-cards-showcase",
+      "name": "Meet The Pros",
+      "order": 4,
+      "visible": true,
+      "content": {
+        "title": "Meet The Pros",
+        "subtitle": "Browse our network of certified beauty professionals",
+        "showSearch": true,
+        "showFilters": true,
+        "cardsPerPage": 6
+      }
+    },
+    {
+      "id": "why-glamlink-5",
+      "type": "why-glamlink",
+      "name": "Why Glamlink",
+      "order": 5,
+      "visible": true,
+      "content": {
+        "title": "Why Glamlink?",
+        "subtitle": "A smarter way to discover trusted beauty professionals and shop expert-approved products.",
+        "features": [
+          {
+            "id": "feature-1",
+            "title": "Verified Professionals Only",
+            "description": "Discover local experts with real experience, real reviews, and real results.",
+            "icon": "PersonOutline"
+          },
+          {
+            "id": "feature-2",
+            "title": "Shop Pro-Approved Products",
+            "description": "Buy the exact products your beauty pro recommends - no more guessing.",
+            "icon": "ShoppingBagOutlined"
+          },
+          {
+            "id": "feature-3",
+            "title": "One-Stop Beauty Hub",
+            "description": "Book appointments, shop products, and manage everything in one app.",
+            "icon": "CalendarTodayOutlined"
+          },
+          {
+            "id": "feature-4",
+            "title": "Support Small Businesses",
+            "description": "Every purchase directly supports independent beauty entrepreneurs.",
+            "icon": "RocketLaunchOutlined"
+          }
+        ],
+        "proCard": {
+          "title": "For Professionals",
+          "subtitle": "Get discovered, get booked, and unlock new ways to grow.",
+          "features": [
+            {
+              "id": "pro-feature-1",
+              "title": "Get Discovered",
+              "description": "Be found by what you do best. Whether it's lashes, microblading, brows, we'll help connect you to clients actively searching for your exact services.",
+              "icon": "SearchOutlined"
+            },
+            {
+              "id": "pro-feature-2",
+              "title": "Booked & Busy",
+              "description": "Fill your calendar with real bookings. Our smart tools help you manage clients, stay organized, and grow your business seamlessly.",
+              "icon": "EventNoteOutlined"
+            },
+            {
+              "id": "pro-feature-3",
+              "title": "Create. Earn. Expand",
+              "description": "From selling your favorite products to launching your own brand or app, it's possible.",
+              "icon": "AttachMoneyOutlined"
+            },
+            {
+              "id": "pro-feature-4",
+              "title": "Smarter Tools, Built for You",
+              "description": "AI-powered features are helping you do more with the right clients.",
+              "icon": "AutoAwesomeOutlined"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "founder-badge-6",
+      "type": "founder-badge",
+      "name": "Founder Badge",
+      "order": 6,
+      "visible": true,
+      "content": {
+        "image": "/images/gold_badge.png",
+        "title": "Founder Badge (First 100 Only)",
+        "description": "Early professionals get exclusive visibility, permanent perks, and first access to new tools.",
+        "subtext": "Join now and be recognized as a Founding Member."
+      }
+    },
+    {
+      "id": "cta-7",
+      "type": "cta",
+      "name": "Download Glamlink for Free",
+      "order": 7,
+      "visible": true,
+      "content": {
+        "title": "Download Glamlink for Free",
+        "subtitle": "Whether you're booking a beauty service or building your business.",
+        "userSection": {
+          "title": "For Users",
+          "description": "Discover trusted pros, book instantly, and shop expert-approved products.",
+          "button": {
+            "text": "Download for Users",
+            "action": "download-user"
+          }
+        },
+        "proSection": {
+          "title": "For Professionals",
+          "description": "Build your brand, grow your client base, and sell products directly.",
+          "button": {
+            "text": "Download for Pros",
+            "action": "download-pro"
+          }
+        }
+      }
+    }
+  ],
+  "ssgEnabled": false
+}

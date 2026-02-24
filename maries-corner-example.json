@@ -1,0 +1,97 @@
+{
+  "type": "maries-corner",
+  "showAuthorInHeader": true,
+  "badgeText": "FOUNDING PRO",
+  "badgeWidth": "fixed",
+  "badgeFontSize": "text-xs",
+  "badgePadding": "px-3 py-1",
+  "headerLayout": "layout2",
+  "authorImageSize": "custom",
+  "authorImageWidth": 80,
+  "authorImageHeight": 80,
+  "authorBadgePosition": "bottom-center",
+  "authorImageBackground": "bg-[#f5e6d3]",
+  "quoteAlignment": "bottom-center",
+  "quoteStyle": "inline",
+  "enableDropCap": true,
+  "dropCapStyle": "classic",
+  "dropCapColor": "",
+  "showMariesPicks": true,
+  "showSideStories": true,
+  "showSocialLink": true,
+  "mainStory": {
+    "content": "Lash extensions have revolutionized the beauty industry, but their longevity depends entirely on how well you care for them. After years of working with thousands of clients and training hundreds of lash artists, I've discovered that the difference between lashes that last 2 weeks versus 4 weeks comes down to a few critical aftercare practices.\n\nThe first 24-48 hours after your appointment are absolutely crucial. This is when the adhesive is still curing and forming its strongest bond. During this time, avoid any contact with water, steam, or excessive heat. I know it's tempting to show off your new lashes right away, but patience during this initial period will pay off with weeks of gorgeous lashes.\n\nDaily maintenance is simpler than most people think. Use a specialized lash cleanser every morning and evening to remove oils, makeup residue, and debris that can break down the adhesive. Gently brush through your lashes with a clean spoolie to keep them separated and fluffy. And here's a pro tip that many people miss: always pat your lashes dry after cleansing instead of rubbing them.\n\nRemember, your lash extensions are an investment in your beauty routine. With proper care, you'll wake up every morning with perfect lashes and save countless hours on your daily makeup routine. The key is consistency and gentleness - treat your lashes like the delicate beauty enhancement they are.",
+    "authorName": "Marie Marks",
+    "authorImage": "/images/cover_1_transparent.png",
+    "backgroundImage": "/images/background_spa_1.png",
+    "title": "Proper aftercare is key to maintaining beautiful, long-lasting extensions",
+    "authorTitle": "Founder & CEO, Glamlink"
+  },
+  "mariesPicks": {
+    "products": [
+      {
+        "category": "Lash Care",
+        "link": "https://glamlink.com/products/lash-cleanser",
+        "image": "/images/sleep_mask.png",
+        "name": "GlamLink Lash Cleanser"
+      },
+      {
+        "link": "https://glamlink.com/products/silk-sleep-mask",
+        "name": "Silk Sleep Mask",
+        "image": "/images/sleep_mask.png",
+        "category": "Sleep Essentials"
+      },
+      {
+        "name": "Lash Growth Serum",
+        "image": "/images/sleep_mask.png",
+        "category": "Treatment",
+        "link": "https://glamlink.com/products/growth-serum"
+      }
+    ],
+    "title": "MARIE'S PICKS"
+  },
+  "sideStories": [
+    {
+      "title": "Sleep with a face pressed against your pillow",
+      "number": "1",
+      "content": "Sleeping face-down or on your side can crush your lashes against the pillow, causing them to bend, break, or fall out prematurely. Always try to sleep on your back."
+    },
+    {
+      "title": "Use oil-based makeup removers",
+      "number": "2",
+      "content": "Oil breaks down lash adhesive instantly. Even \"oil-free\" products can contain ingredients that weaken the bond. Stick to water-based, lash-safe products only."
+    },
+    {
+      "content": "Not cleaning your lashes daily leads to buildup of oils, dead skin, and bacteria, which not only breaks down adhesive but can also cause infections.",
+      "title": "Skip your lash cleaning routine",
+      "number": "3"
+    }
+  ],
+  "socialLink": {
+    "platform": "GlamLink",
+    "followText": "Follow Marie",
+    "qrCode": "https://www.google.com/",
+    "handle": "lashbymarie"
+  },
+  "subtitleColor": "text-gray-900",
+  "titleAlignment": "left",
+  "subtitle2FontWeight": "font-normal",
+  "tagline": "Pro Tips for Lasting Lash Extensions",
+  "bodyLineHeight": "leading-normal",
+  "subtitle2FontSize": "text-lg",
+  "subtitle2": "Monthly insights from Marie, GlamLink Founding Pro & Lash Expert",
+  "subtitle2Color": "text-gray-900",
+  "titleColor": "text-gray-900",
+  "bodyFontSize": "text-base",
+  "titleFontWeight": "font-normal",
+  "subtitleFontFamily": "font-[Roboto,sans-serif]",
+  "bodyColor": "text-gray-700",
+  "titleFontFamily": "font-[Roboto,sans-serif]",
+  "subtitle2FontFamily": "font-[Roboto,sans-serif]",
+  "subtitleAlignment": "left",
+  "subtitle2Alignment": "left",
+  "subtitleFontWeight": "font-medium",
+  "subtitleFontSize": "text-3xl md:text-4xl",
+  "bodyFontFamily": "font-sans",
+  "titleFontSize": "text-5xl md:text-6xl"
+}

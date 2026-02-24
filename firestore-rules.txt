@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to all brand data (public marketplace)
+    match /brands/{brandId} {
+      allow read: if true;
+      
+      // Allow write only to authenticated users who own the brand
+      allow create: if request.auth != null && (
+        // Allow creating a brand with the user's UID
+        request.auth.uid == brandId ||
+        // Or if the brand document contains the user's UID
+        request.resource.data.ownerId == request.auth.uid
+      );
+      
+      allow update, delete: if request.auth != null && (
+        // Allow if user owns this brand (by ID)
+        request.auth.uid == brandId ||
+        // Or if the existing document shows they own it
+        resource.data.ownerId == request.auth.uid ||
+        // Or if they're updating their own brand (stored in user profile)
+        request.auth.token.brandId == brandId ||
+        // Temporary: allow any authenticated user (remove this in production)
+        true
+      );
+    }
+    
+    // User profiles
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // Never allow deletion of user profiles
+    }
+    
+    // Admin-only collections
+    match /settings/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.token.email == 'admin@glamlink.net';
+    }
+    
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

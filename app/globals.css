@@ -1,0 +1,956 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;400;500;600;700&display=swap');
+
+/* PDF Export Styles - Imported from Magazine Styles */
+@import "../lib/pages/magazine/styles/pdf-export.css";
+
+/* Custom Font Declarations - Add font files to /public/fonts/ when available */
+/* Note: Monotype Corsiva may already be available as a system font on Windows/Mac */
+/*
+@font-face {
+  font-family: 'Monotype Corsiva';
+  src: url('/fonts/monotype-corsiva.woff2') format('woff2'),
+       url('/fonts/monotype-corsiva.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Feeling Passionate';
+  src: url('/fonts/feeling-passionate.woff2') format('woff2'),
+       url('/fonts/feeling-passionate.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Style Casual';
+  src: url('/fonts/style-casual.woff2') format('woff2'),
+       url('/fonts/style-casual.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* TipTap Editor Styles - Preserve inline styles */
+.tiptap-editor {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.tiptap-editor p {
+  margin-bottom: 1em;
+  min-height: 1.5em; /* Preserve empty paragraphs */
+}
+
+.tiptap-editor p:empty {
+  min-height: 1.5em; /* Ensure empty paragraphs show as line breaks */
+}
+
+.tiptap-editor p:empty::before {
+  content: "\00a0"; /* Non-breaking space for empty paragraphs */
+}
+
+/* Preserve inline styles from TipTap - DO NOT OVERRIDE */
+.tiptap-editor [style] {
+  /* Inline styles take precedence */
+}
+
+/* Rich Content Display - For rendered HTML from editor */
+.rich-content {
+  font-size: 1.125rem; /* 18px default */
+  line-height: 1.75;
+  color: text-gray-900;
+}
+
+.rich-content p {
+  margin-bottom: 1em;
+  min-height: 1.5em;
+  color: black;
+}
+
+.rich-content p:empty {
+  min-height: 1.5em;
+}
+
+.rich-content p:empty::before {
+  content: "\00a0";
+}
+
+/* Preserve all inline styles in rich content */
+.rich-content span[style] {
+  /* Use the inline styles as-is */
+}
+
+/* Important: Let inline styles take precedence */
+.rich-content span[style*="color"] {
+  /* The inline style will override */
+}
+
+.rich-content span[style*="font-size"] {
+  /* The inline style will override */
+}
+
+/* Basic typography for rich content without overriding inline styles */
+.rich-content h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+  font-weight: bold;
+}
+.rich-content h2 {
+  font-size: 1.5em;
+  margin: 0.75em 0;
+  font-weight: bold;
+}
+.rich-content h3 {
+  font-size: 1.17em;
+  margin: 0.83em 0;
+  font-weight: bold;
+}
+.rich-content h4 {
+  font-size: 1em;
+  margin: 1.12em 0;
+  font-weight: bold;
+}
+.rich-content h5 {
+  font-size: 0.83em;
+  margin: 1.5em 0;
+  font-weight: bold;
+}
+.rich-content h6 {
+  font-size: 0.75em;
+  margin: 1.67em 0;
+  font-weight: bold;
+}
+
+.rich-content ul {
+  list-style-type: none;
+  padding-left: 2em;
+  margin: 1em 0;
+}
+.rich-content ol {
+  list-style-type: decimal;
+  padding-left: 2em;
+  margin: 1em 0;
+}
+.rich-content li {
+  margin: 0.5em 0;
+  position: relative;
+}
+
+/* Teal star bullets for unordered lists */
+.rich-content ul li::before {
+  content: "★";
+  color: #14b8a6; /* glamlink-teal color */
+  position: absolute;
+  left: -1.5em;
+  margin-right: 0.5em;
+  flex-shrink: 0;
+}
+
+.rich-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+}
+
+.rich-content code {
+  background-color: #f3f4f6;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
+  font-family: monospace;
+}
+
+.rich-content strong {
+  font-weight: bold;
+}
+.rich-content em {
+  font-style: italic;
+}
+.rich-content s {
+  text-decoration: line-through;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-top: 80px; /* Account for fixed navigation */
+}
+
+/* Navigation specific font */
+.font-geist {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif !important;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Drop Cap Styles for Magazine Articles */
+.drop-cap-container.drop-cap-classic::first-letter {
+  float: left;
+  font-size: 4.5rem;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  margin-right: 8px;
+  margin-top: 4px;
+  line-height: 0.85;
+  color: inherit;
+}
+
+.drop-cap-container.drop-cap-modern::first-letter {
+  float: left;
+  font-size: 4rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 900;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0.25rem;
+  margin-right: 12px;
+  margin-top: 4px;
+  line-height: 0.85;
+}
+
+.drop-cap-container.drop-cap-elegant::first-letter {
+  float: left;
+  font-size: 4.5rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  border: 2px solid currentColor;
+  padding: 0.5rem 0.75rem;
+  margin-right: 12px;
+  margin-top: 4px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  line-height: 0.85;
+  color: inherit;
+}
+
+/* Drop Cap Color Overrides */
+.drop-cap-container.drop-cap-color-purple::first-letter {
+  color: #764ba2 !important;
+  border-color: #764ba2 !important;
+}
+
+.drop-cap-container.drop-cap-color-teal::first-letter {
+  color: #14b8a6 !important;
+  border-color: #14b8a6 !important;
+}
+
+.drop-cap-container.drop-cap-color-black::first-letter {
+  color: #111827 !important;
+  border-color: #111827 !important;
+}
+
+.drop-cap-container.drop-cap-color-gray::first-letter {
+  color: #4b5563 !important;
+  border-color: #4b5563 !important;
+}
+
+/* Note: Modern style keeps gradient, so color overrides don't apply */
+.drop-cap-container.drop-cap-modern.drop-cap-color-purple::first-letter,
+.drop-cap-container.drop-cap-modern.drop-cap-color-teal::first-letter,
+.drop-cap-container.drop-cap-modern.drop-cap-color-black::first-letter,
+.drop-cap-container.drop-cap-modern.drop-cap-color-gray::first-letter {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-glamlink-teal hover:bg-glamlink-teal-dark text-white font-semibold py-3 px-8 rounded-full transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-glamlink-teal focus:ring-offset-2 shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-100 text-glamlink-teal font-semibold py-3 px-8 rounded-full border-2 border-glamlink-teal transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-glamlink-teal focus:ring-offset-2;
+  }
+
+  .btn-app-store {
+    @apply inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors duration-200;
+  }
+
+  .btn-google-play {
+    @apply inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors duration-200;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-glamlink-teal to-glamlink-teal-dark bg-clip-text text-transparent;
+  }
+
+  .hero-title {
+    @apply text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight;
+  }
+
+  .hero-subtitle {
+    @apply text-lg md:text-xl text-white/90 max-w-2xl;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    @apply animate-pulse;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Magazine Main Content Spacing - ONLY for main page and editor's note */
+.magazine-main-content p,
+.prose.magazine-main-content p,
+.magazine-page .magazine-main-content p {
+  margin-bottom: 1rem !important;
+}
+
+.magazine-main-content p:last-child,
+.prose.magazine-main-content p:last-child,
+.magazine-page .magazine-main-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Blog content styling for markdown-* classes */
+.blog-content {
+  @apply max-w-none;
+}
+
+/* Prose styles for WYSIWYG/HTML content */
+.blog-content.prose {
+  @apply text-gray-700 dark:text-gray-300;
+}
+
+.blog-content.prose h1 {
+  @apply text-4xl font-bold text-gray-900 dark:text-white mb-6 mt-8 first:mt-0 leading-tight;
+}
+
+.blog-content.prose h2 {
+  @apply text-3xl font-bold text-gray-900 dark:text-white mb-6 mt-8 first:mt-0 leading-tight;
+}
+
+.blog-content.prose h3 {
+  @apply text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4 mt-6 leading-snug;
+}
+
+.blog-content.prose h4 {
+  @apply text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3 mt-5 leading-snug;
+}
+
+.blog-content.prose h5 {
+  @apply text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-4;
+}
+
+.blog-content.prose h6 {
+  @apply text-base font-semibold text-gray-800 dark:text-gray-200 mb-2 mt-3;
+}
+
+.blog-content.prose p {
+  @apply mb-5 leading-relaxed text-gray-700 dark:text-gray-300 text-base;
+}
+
+.blog-content.prose strong {
+  @apply font-bold text-gray-900 dark:text-white;
+}
+
+.blog-content.prose em {
+  @apply italic;
+}
+
+.blog-content.prose ul {
+  @apply mb-6 space-y-2 ml-4 list-disc list-inside;
+}
+
+.blog-content.prose ol {
+  @apply mb-6 space-y-2 ml-4 list-decimal list-inside;
+}
+
+.blog-content.prose li {
+  @apply text-gray-700 dark:text-gray-300 leading-relaxed;
+}
+
+.blog-content.prose a {
+  @apply text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline font-medium transition-colors;
+}
+
+.blog-content.prose code {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-sm font-mono;
+}
+
+.blog-content.prose pre {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-4 rounded-lg overflow-x-auto mb-6;
+}
+
+.blog-content.prose blockquote {
+  @apply border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-400 mb-6;
+}
+
+.blog-content.prose hr {
+  @apply border-gray-300 dark:border-gray-600 my-8;
+}
+
+.blog-content.prose table {
+  @apply min-w-full border-collapse border border-gray-300 dark:border-gray-600 mb-6;
+}
+
+.blog-content.prose th {
+  @apply border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-4 py-2 font-semibold text-left;
+}
+
+.blog-content.prose td {
+  @apply border border-gray-300 dark:border-gray-600 px-4 py-2;
+}
+
+.blog-content.prose img {
+  @apply rounded-lg max-w-full h-auto mx-auto mb-6;
+}
+
+/* Original markdown-* classes for backward compatibility */
+.blog-content .markdown-h1 {
+  @apply text-4xl font-bold text-gray-900 dark:text-white mb-6 mt-8 first:mt-0 leading-tight;
+}
+
+.blog-content .markdown-h2 {
+  @apply text-3xl font-bold text-gray-900 dark:text-white mb-6 mt-8 first:mt-0 leading-tight;
+}
+
+.blog-content .markdown-h3 {
+  @apply text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4 mt-6 leading-snug;
+}
+
+.blog-content .markdown-h4 {
+  @apply text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3 mt-5 leading-snug;
+}
+
+.blog-content .markdown-p {
+  @apply mb-5 leading-relaxed text-gray-700 dark:text-gray-300 text-base;
+}
+
+.blog-content .markdown-bold {
+  @apply font-bold text-gray-900 dark:text-white;
+}
+
+.blog-content .markdown-italic {
+  @apply italic;
+}
+
+.blog-content .markdown-ul {
+  @apply mb-6 space-y-2 ml-4;
+}
+
+.blog-content .markdown-ol {
+  @apply mb-6 space-y-2 ml-4;
+}
+
+.blog-content .markdown-li {
+  @apply flex items-start text-gray-700 dark:text-gray-300 leading-relaxed;
+}
+
+.blog-content .markdown-ul .markdown-li::before {
+  content: "";
+  @apply inline-block w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0;
+}
+
+.blog-content .markdown-ol {
+  counter-reset: list-counter;
+}
+
+.blog-content .markdown-ol .markdown-li {
+  counter-increment: list-counter;
+}
+
+.blog-content .markdown-ol .markdown-li::before {
+  content: counter(list-counter);
+  @apply inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-medium rounded-full mr-3 flex-shrink-0 mt-0.5;
+}
+
+.blog-content .markdown-link {
+  @apply text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline font-medium transition-colors;
+}
+
+.blog-content .markdown-inline-code {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-sm font-mono;
+}
+
+.blog-content .markdown-code-block {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-4 rounded-lg overflow-x-auto mb-6;
+}
+
+.blog-content .markdown-blockquote {
+  @apply border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-400 mb-6;
+}
+
+.blog-content .markdown-hr {
+  @apply border-gray-300 dark:border-gray-600 my-8;
+}
+
+
+/* Float Layout Utilities for Custom Sections */
+.float-left {
+  float: left !important;
+}
+
+.float-right {
+  float: right !important;
+}
+
+.float-none {
+  float: none !important;
+}
+
+/* Responsive float variants - BELOW breakpoint (disable floats) */
+@media (max-width: 767px) {
+  .max-md\:float-none {
+    float: none !important;
+  }
+  .max-md\:w-full {
+    width: 100% !important;
+  }
+  .max-md\:mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .max-md\:mb-4 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .max-lg\:float-none {
+    float: none !important;
+  }
+  .max-lg\:w-full {
+    width: 100% !important;
+  }
+  .max-lg\:mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .max-lg\:mb-4 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (max-width: 1279px) {
+  .max-xl\:float-none {
+    float: none !important;
+  }
+  .max-xl\:w-full {
+    width: 100% !important;
+  }
+  .max-xl\:mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .max-xl\:mb-4 {
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Responsive display utilities for content blocks */
+.hide-above-xs {
+  @media (min-width: 490px) {
+    display: none !important;
+  }
+}
+
+.hide-below-xs {
+  @media (max-width: 489px) {
+    display: none !important;
+  }
+}
+
+.hide-above-sm {
+  @media (min-width: 640px) {
+    display: none !important;
+  }
+}
+
+.hide-below-sm {
+  @media (max-width: 639px) {
+    display: none !important;
+  }
+}
+
+.hide-above-md {
+  @media (min-width: 768px) {
+    display: none !important;
+  }
+}
+
+.hide-below-md {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.hide-above-lg {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
+}
+
+.hide-below-lg {
+  @media (max-width: 1023px) {
+    display: none !important;
+  }
+}
+
+.hide-above-xl {
+  @media (min-width: 1280px) {
+    display: none !important;
+  }
+}
+
+.hide-below-xl {
+  @media (max-width: 1279px) {
+    display: none !important;
+  }
+}
+
+/* Responsive utility classes for magazine content */
+@media (max-width: 490px) {
+  .xs-short-lineheight {
+    line-height: 24px !important;
+  }
+
+  .xs-short-lineheight * {
+    line-height: 24px !important;
+  }
+
+  .xs-small-margin {
+    margin-bottom: 10px !important;
+  }
+
+  .xs-small-margin p,
+  .xs-small-margin h1,
+  .xs-small-margin h2,
+  .xs-small-margin h3,
+  .xs-small-margin h4,
+  .xs-small-margin h5,
+  .xs-small-margin h6,
+  .xs-small-margin ul,
+  .xs-small-margin ol,
+  .xs-small-margin li {
+    margin-bottom: 10px !important;
+  }
+
+  /* Override rich-content styles with higher specificity */
+  .xs-small-margin .rich-content p,
+  .rich-content .xs-small-margin p {
+    margin-bottom: 10px !important;
+  }
+
+  .xs-short-lineheight .rich-content p,
+  .rich-content .xs-short-lineheight p {
+    line-height: 24px !important;
+  }
+
+  /* Direct override for rich-content with utility classes */
+  .rich-content.xs-small-margin p,
+  .rich-content.xs-short-lineheight p {
+    margin-bottom: 10px !important;
+  }
+
+  .rich-content.xs-short-lineheight p {
+    line-height: 24px !important;
+  }
+}
+
+/* Float container clearing */
+.custom-section-float-container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@layer components {
+  @media (min-width: 1024px) {
+    .magazine-issues {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .magazine-issues {
+      max-width: 1280px;
+    }
+  }
+}
+
+/* Video Fullscreen Styles - Ensure videos maintain aspect ratio in fullscreen */
+/* Standard */
+video:fullscreen {
+  object-fit: contain !important;
+  background-color: black;
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+video:-webkit-full-screen {
+  object-fit: contain !important;
+  background-color: black;
+}
+
+/* Firefox */
+video:-moz-full-screen {
+  object-fit: contain !important;
+  background-color: black;
+}
+
+/* IE/Edge Legacy */
+video:-ms-fullscreen {
+  object-fit: contain !important;
+  background-color: black;
+}
+
+/* =============================================================================
+   PDF CAPTURE MODE - Hide link hotspots during canvas generation
+   =============================================================================
+   The .pdf-capture-mode class is added to the container during html2canvas
+   capture to ensure link hotspots are completely invisible in the final PDF.
+*/
+.pdf-capture-mode .link-hotspot-preview {
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.pdf-capture-mode .link-hotspot-preview > div {
+  display: none !important;
+}
+
+/* =============================================================================
+   Google Maps InfoWindow Styling
+   =============================================================================
+   Customizes the Google Maps InfoWindow to align content with the close button
+   and reduce excessive blank space at the top.
+*/
+
+/* Main InfoWindow container - reduce padding */
+.gm-style-iw.gm-style-iw-c {
+  padding: 0 !important;
+  padding-inline-end: 0 !important;
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Header row containing close button - make it overlay on content */
+.gm-style-iw-chr {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 10 !important;
+  background: transparent !important;
+  height: auto !important;
+  padding: 0 !important;
+}
+
+/* Hide the empty header content div */
+.gm-style-iw-ch {
+  display: none !important;
+}
+
+/* Close button styling - position it properly */
+.gm-style-iw .gm-ui-hover-effect {
+  width: 32px !important;
+  height: 32px !important;
+  margin: 4px !important;
+  opacity: 0.7;
+}
+
+.gm-style-iw .gm-ui-hover-effect:hover {
+  opacity: 1;
+}
+
+.gm-style-iw .gm-ui-hover-effect span {
+  margin: 4px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Content area - remove scroll wrapper padding */
+.gm-style-iw-d {
+  overflow: visible !important;
+  max-height: none !important;
+  padding: 0 !important;
+}
+
+/* Add padding to our content to avoid close button overlap */
+.gm-style-iw-d > div > div {
+  padding-right: 36px !important;
+}
+
+/* ================= ARTICLE WRAPPER ================= */
+
+.prose-article {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #1f2937;
+}
+
+/* ================= HEADINGS ================= */
+
+.prose-article h1,
+.prose-article h2,
+.prose-article h3,
+.prose-article h4 {
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.prose-article h1 { font-size: 32px; }
+.prose-article h2 { font-size: 26px; }
+.prose-article h3 { font-size: 22px; }
+.prose-article h4 { font-size: 18px; }
+
+/* ================= PARAGRAPHS ================= */
+
+.prose-article p {
+  margin-bottom: 16px;
+}
+
+/* Remove empty paragraphs */
+.prose-article p:empty {
+  display: none;
+}
+
+/* ================= IMAGES ================= */
+
+.prose-article img {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 12px;
+  margin: 24px 0;
+  display: block;
+}
+
+/* ================= LINKS ================= */
+
+.prose-article a {
+  color: #6366f1;
+  text-decoration: underline;
+  transition: 0.2s ease;
+}
+
+.prose-article a:hover {
+  color: #4f46e5;
+}
+
+/* ================= BLOCKQUOTE ================= */
+
+.prose-article blockquote {
+  border-left: 3px solid #BBE8EB; /* soft teal like screenshot */
+  margin: 32px 0;
+  padding-left: 20px;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.7;
+  color: #1f2937; /* darker readable text */
+  background: transparent;
+  border-radius: 0;
+}
+/* ================= LISTS ================= */
+
+.prose-article ul,
+.prose-article ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.prose-article li {
+  margin-bottom: 8px;
+}
+
+/* ================= STRONG / BOLD ================= */
+
+.prose-article strong {
+  font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .prose-article {
+    font-size: 15px;
+  }
+
+  .prose-article h1 { font-size: 26px; }
+  .prose-article h2 { font-size: 22px; }
+  .prose-article h3 { font-size: 20px; }
+}

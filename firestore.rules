@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read and write their own user profile
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow all authenticated users to read brand data
+    match /brands/{brandId} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        (request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'] ||
+         (resource != null && request.auth.uid == resource.data.ownerId) ||  // Existing brand owner
+         (resource == null && request.auth.uid == request.resource.data.ownerId));  // Creating new brand
+    }
+    
+    // Allow all authenticated users to read products
+    match /products/{document=**} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow all authenticated users to read providers
+    match /certifiedProviders/{document=**} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow all authenticated users to read before/afters
+    match /beforeAfters/{document=**} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow all authenticated users to read training programs
+    match /trainingPrograms/{document=**} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow all authenticated users to read reviews
+    match /reviews/{document=**} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow authenticated users to read/write their own analyses
+    match /analyses/{analysisId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.userId || 
+         request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com']);
+      allow write: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // Allow authenticated professionals to have their own document
+    match /professionals/{userId} {
+      allow read: if true;  // Public can view professionals
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow public read and authorized write for magazine issues
+    match /magazine_issues/{issueId} {
+      allow read: if true;  // Public read access
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'melanie@glamlink.net', 'mohit@blockcod.com'];
+    }
+  }
+}

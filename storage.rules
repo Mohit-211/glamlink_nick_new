@@ -1,0 +1,38 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow users to read/write their own analysis images
+    match /users/{userId}/analyses/{analysisId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow public read access to brand images
+    match /brands/{brandId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow public read access to product images
+    match /products/{productId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow public read access to provider images
+    match /providers/{providerId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+    
+    // Allow public read access to before/after images
+    match /beforeAfters/{baId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.email in ['admin@glamlink.com', 'test@glamlink.com'];
+    }
+  }
+}
