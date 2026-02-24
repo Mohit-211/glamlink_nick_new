@@ -15,10 +15,8 @@ import {
 import { DynamicMissingFieldsSummary, PerformanceMonitor } from "@/lib/pages/apply/shared/components/form-utils";
 
 export default function FeaturedForm({ onSubmit, isLoading = false, configs }: GetFeaturedFormProps) {
-  // Use DB config if provided, otherwise fall back to static config
   const fieldsLayout: FieldsLayout = useMemo(() => {
     if (configs?.fieldsLayout) {
-      // Merge DB config with static config as fallback for any missing fields
       return {
         profile: { ...staticFieldsLayout.profile, ...configs.fieldsLayout.profile },
         glamlinkIntegration: { ...staticFieldsLayout.glamlinkIntegration, ...configs.fieldsLayout.glamlinkIntegration },
@@ -32,7 +30,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
   }, [configs]);
 
   const [formData, setFormData] = useState<GetFeaturedFormData>(() => ({
-    // Profile fields with defaults
     email: fieldsLayout.profile.email?.defaultValue || '',
     fullName: '',
     phone: '',
@@ -46,7 +43,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     certificationDetails: '',
     applicationType: fieldsLayout.profile.applicationType?.defaultValue || 'local-spotlight',
 
-    // Magazine fields (Cover form)
     bio: '',
     headshots: [],
     workPhotos: [],
@@ -63,7 +59,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     giveaway: '',
     specialOffers: '',
 
-    // Glamlink Integration fields
     promotionOffer: false,
     promotionDetails: '',
     contentPlanningRadio: '',
@@ -72,7 +67,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     instagramConsent: false,
     hearAboutLocalSpotlight: '',
 
-    // Local Spotlight fields
     city: '',
     specialties: '',
     workExperience: '',
@@ -81,7 +75,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     featuredInterest: '',
     whyLocalSpotlight: '',
 
-    // Top Treatment fields
     treatmentName: '',
     treatmentCategory: '',
     treatmentDescription: '',
@@ -100,7 +93,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     whyTopTreatment: '',
     beforeAfterPhotos: [],
 
-    // Rising Star fields
     location: '',
     instagram: '',
     careerStartTime: '',
@@ -126,9 +118,7 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     professionalPhotos: [],
   }));
 
-  // Use applicationType from formData instead of separate state
   const selectedForm = formData.applicationType || 'local-spotlight';
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -145,72 +135,53 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     forceProgressUpdate
   } = useTabValidationOptimized(formData, fieldsLayout);
 
-  // Force progress update before form submission to ensure accuracy
   const handleSubmitWithProgressUpdate = async (e: React.FormEvent) => {
-    // Force immediate progress calculation before submission
     forceProgressUpdate();
     handleSubmit(e);
   };
 
-  // Performance monitoring disabled
-  // const performanceMetrics = process.env.NODE_ENV === 'development' ? getPerformanceMetrics() : null;
-
-  // Handle field value changes
-  const handleFieldChange = useCallback((fieldKey: string, value: any) => {
+  // ✅ fieldKey widened to string | number to match child form component expectations
+  const handleFieldChange = useCallback((fieldKey: string | number, value: any) => {
     setFormData(prev => ({
       ...prev,
       [fieldKey]: value
     }));
-
-    // Clear error for this field when user updates it
     if (errors[fieldKey]) {
-      clearFieldError(fieldKey);
+      clearFieldError(String(fieldKey));
     }
   }, [errors, clearFieldError]);
 
-  // Handle field blur (focus out) for validation
-  const handleFieldBlur = useCallback((fieldKey: string) => {
-    validateFieldOnBlur(fieldKey);
+  const handleFieldBlur = useCallback((fieldKey: string | number) => {
+    validateFieldOnBlur(String(fieldKey));
   }, [validateFieldOnBlur]);
 
-  // Handle field focus for clearing errors
-  const handleFieldFocus = useCallback((fieldKey: string) => {
-    clearFieldErrorOnFocus(fieldKey);
+  const handleFieldFocus = useCallback((fieldKey: string | number) => {
+    clearFieldErrorOnFocus(String(fieldKey));
   }, [clearFieldErrorOnFocus]);
 
-  // Calculate progress percentage using comprehensive validation
   const progressInfo = getProgressInfo(selectedForm as any);
   const progressPercentage = progressInfo.progressPercentage;
 
-  // Get progress message
   const getProgressMessage = useCallback(() => {
     if (progressPercentage === 0) return "Start with your profile information";
     if (progressPercentage === 100) return "All required fields completed! Ready to submit.";
     return `${progressInfo.completedFields} of ${progressInfo.totalFields} required fields completed`;
   }, [progressPercentage, progressInfo]);
 
-
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (isSubmitting || isLoading) return;
-
-    // Check if form is actually complete using comprehensive validation
     if (!progressInfo.isComplete) {
       setSubmitError(`Please complete all required fields. ${progressInfo.missingFields} fields are still missing.`);
       return;
     }
-
     setIsSubmitting(true);
     setSubmitError(null);
     clearAllErrors();
-
     try {
-      // Map applicationType to formType for API compatibility
       const submissionData = {
         ...formData,
-        formType: formData.applicationType // Map applicationType to formType
+        formType: formData.applicationType
       };
       await onSubmit(submissionData);
     } catch (error) {
@@ -222,21 +193,17 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
     }
   };
 
-
   return (
     <>
       <form onSubmit={handleSubmitWithProgressUpdate} className="space-y-8">
         {/* Profile Information Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="mb-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Profile Information
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Profile Information</h3>
             <p className="text-gray-600">
               Please provide your basic contact and business information. All fields except Website are required.
             </p>
           </div>
-
           <ProfileInfoForm
             formData={formData}
             handleFieldChange={handleFieldChange}
@@ -248,7 +215,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
           />
         </div>
 
-        
         {/* Dynamic Form Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           {selectedForm === 'cover' && (
@@ -264,7 +230,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
               glamlinkConfig={fieldsLayout.glamlinkIntegration}
             />
           )}
-
           {selectedForm === 'local-spotlight' && (
             <LocalSpotlightForm
               formData={formData}
@@ -278,7 +243,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
               glamlinkConfig={fieldsLayout.glamlinkIntegration}
             />
           )}
-
           {selectedForm === 'top-treatment' && (
             <TopTreatmentForm
               formData={formData}
@@ -292,7 +256,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
               glamlinkConfig={fieldsLayout.glamlinkIntegration}
             />
           )}
-
           {selectedForm === 'rising-star' && (
             <RisingStarForm
               formData={formData}
@@ -318,9 +281,7 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
                 </svg>
               </div>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">
-                  {submitError}
-                </h3>
+                <h3 className="text-sm font-medium text-red-800">{submitError}</h3>
               </div>
             </div>
           </div>
@@ -330,16 +291,12 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">Progress</span>
-            <span className="text-sm text-gray-500">
-              {getProgressMessage()}
-            </span>
+            <span className="text-sm text-gray-500">{getProgressMessage()}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
               className="bg-glamlink-teal h-2 rounded-full transition-all duration-300"
-              style={{
-                width: `${progressPercentage}%`
-              }}
+              style={{ width: `${progressPercentage}%` }}
             />
           </div>
           <div className="mt-2 text-xs text-gray-500">
@@ -370,16 +327,6 @@ export default function FeaturedForm({ onSubmit, isLoading = false, configs }: G
           </button>
         </div>
       </form>
-
-      {/* Performance Monitor Disabled */}
-      {/* <PerformanceMonitor
-        metrics={performanceMetrics}
-        onLogMetrics={() => {
-          if (performanceMetrics) {
-            console.log('Validation Performance Metrics:', performanceMetrics);
-          }
-        }}
-      /> */}
     </>
   );
 }
