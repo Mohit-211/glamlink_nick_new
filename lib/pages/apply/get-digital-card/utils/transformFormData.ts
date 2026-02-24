@@ -3,12 +3,8 @@ import type { Professional, LocationData } from '@/lib/pages/for-professionals/t
 import type { CondensedCardConfig } from '@/lib/features/digital-cards/types';
 import { createFeatureDebug } from '@/lib/shared/utils/debug';
 
-// Debug logger for form data transformation
-// Enable via URL: ?digital-card-preview-debug=true
-// Or localStorage: localStorage.setItem('digital-card-preview-debug', 'true')
 const debug = createFeatureDebug('Digital Card Preview');
 
-// Sample data for an exciting preview when form is empty
 const SAMPLE_PREVIEW_DATA = {
   name: 'Sophia Martinez',
   title: 'Master Hair Stylist & Colorist',
@@ -29,10 +25,7 @@ const SAMPLE_PREVIEW_DATA = {
     'Saturday: 9:00 AM - 5:00 PM',
     'Sunday: Closed'
   ],
-  importantInfo: [
-    'Deposit required to secure booking'
-  ],
-  // Sample gallery items for Signature Work section
+  importantInfo: ['Deposit required to secure booking'],
   gallery: [
     {
       id: 'sample-gallery-1',
@@ -67,7 +60,6 @@ const SAMPLE_PREVIEW_DATA = {
   profileImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face',
 };
 
-// Default condensed card config for preview layout
 const DEFAULT_CONDENSED_CARD_CONFIG: CondensedCardConfig = {
   dimensions: {
     preset: 'instagram-portrait',
@@ -134,38 +126,37 @@ const DEFAULT_CONDENSED_CARD_CONFIG: CondensedCardConfig = {
   },
 };
 
-// Default location for preview when no location is set (without lat/lng to prevent map display)
 const DEFAULT_LOCATION: Partial<LocationData> = {
   address: 'Your Business Address',
   businessName: 'Your Business Location',
   isPrimary: true,
   id: 'default-location'
-  // Note: lat and lng are intentionally omitted to prevent map display
+  // lat/lng intentionally omitted to prevent map display
 };
 
-/**
- * Ensure location data has valid numeric coordinates
- * Only includes lat/lng if they are valid numbers
- */
 function normalizeLocation(location: LocationData | Partial<LocationData>): LocationData {
   const normalized: any = { ...location };
 
-  // Only include lat/lng if they exist and are valid numbers
   if (location.lat !== undefined && location.lat !== null) {
     const lat = typeof location.lat === 'number' ? location.lat : parseFloat(String(location.lat));
-    if (!isNaN(lat) && lat !== 0) {
-      normalized.lat = lat;
-    }
+    if (!isNaN(lat) && lat !== 0) normalized.lat = lat;
   }
 
   if (location.lng !== undefined && location.lng !== null) {
     const lng = typeof location.lng === 'number' ? location.lng : parseFloat(String(location.lng));
-    if (!isNaN(lng) && lng !== 0) {
-      normalized.lng = lng;
-    }
+    if (!isNaN(lng) && lng !== 0) normalized.lng = lng;
   }
 
   return normalized as LocationData;
+}
+
+/**
+ * Convert BusinessHour[] to string[] for preview display
+ */
+function businessHoursToStrings(hours: DigitalCardFormData['business_hour']): string[] {
+  return hours.map(h =>
+    h.closed ? `${h.day}: Closed` : `${h.day}: ${h.open_time} - ${h.close_time}`
+  );
 }
 
 /**
@@ -174,11 +165,11 @@ function normalizeLocation(location: LocationData | Partial<LocationData>): Loca
 function hasUserInput(formData: DigitalCardFormData): boolean {
   return !!(
     formData.name?.trim() ||
-    formData.title?.trim() ||
+    formData.professional_title?.trim() ||    // ✅ was: title
     formData.email?.trim() ||
     formData.phone?.trim() ||
     formData.bio?.trim() ||
-    formData.specialty?.trim() ||
+    formData.primary_specialty?.trim() ||     // ✅ was: specialty
     formData.profileImage ||
     (formData.locations && formData.locations.length > 0) ||
     (formData.specialties && formData.specialties.length > 0)
@@ -186,22 +177,17 @@ function hasUserInput(formData: DigitalCardFormData): boolean {
 }
 
 /**
- * Transform application form data to Professional format for preview
- *
- * This function maps the form fields to the Professional interface.
- * When the form is empty, it shows exciting sample data to encourage users to fill out the form.
- * Once the user starts entering data, their data takes precedence.
+ * Transform DigitalCardFormData to Professional format for preview
  */
 export function transformFormDataToProfessional(
   formData: DigitalCardFormData
 ): Partial<Professional> {
-  // Check if user has entered any data
   const userHasInput = hasUserInput(formData);
 
   debug.group('transformFormDataToProfessional');
   debug.log('Form data received:', {
     name: formData.name,
-    title: formData.title,
+    professional_title: formData.professional_title,
     email: formData.email,
     phone: formData.phone,
     hasProfileImage: !!formData.profileImage,
@@ -210,20 +196,9 @@ export function transformFormDataToProfessional(
   });
   debug.log('User has input:', userHasInput);
 
-  // If form is empty, use sample data for an exciting preview
+  // If form is empty, show sample data for an exciting preview
   if (!userHasInput) {
     debug.log('Using SAMPLE preview data (form is empty)');
-    debug.log('Sample data includes:', {
-      name: SAMPLE_PREVIEW_DATA.name,
-      title: SAMPLE_PREVIEW_DATA.title,
-      specialty: SAMPLE_PREVIEW_DATA.specialty,
-      specialtiesCount: SAMPLE_PREVIEW_DATA.specialties.length,
-      importantInfoCount: SAMPLE_PREVIEW_DATA.importantInfo.length,
-      galleryCount: SAMPLE_PREVIEW_DATA.gallery.length,
-      hasCondensedCardConfig: true,
-      sectionsCount: DEFAULT_CONDENSED_CARD_CONFIG.sections.length,
-      sections: DEFAULT_CONDENSED_CARD_CONFIG.sections.map(s => s.id),
-    });
     debug.groupEnd();
     return {
       id: 'preview',
@@ -266,92 +241,87 @@ export function transformFormDataToProfessional(
     };
   }
 
-  // User has entered data - use their input with sensible defaults
+  // User has entered data — use their input with sensible defaults
   debug.log('Using USER data with defaults');
 
-  // Normalize locations to ensure lat/lng are numbers, or use default (without coordinates to prevent map display)
   const normalizedLocations = formData.locations && formData.locations.length > 0
     ? formData.locations.map(normalizeLocation)
     : [normalizeLocation(DEFAULT_LOCATION as LocationData)];
 
-  debug.log('Normalized locations:', normalizedLocations.length);
-
   const primaryLocation = normalizedLocations[0];
 
+  // ✅ business_hour (BusinessHour[]) → string[] for preview
+  const businessHoursStrings = formData.business_hour && formData.business_hour.length > 0
+    ? businessHoursToStrings(formData.business_hour)
+    : [
+        'Monday: 9:00 AM - 6:00 PM',
+        'Tuesday: 9:00 AM - 6:00 PM',
+        'Wednesday: 9:00 AM - 6:00 PM',
+        'Thursday: 9:00 AM - 6:00 PM',
+        'Friday: 9:00 AM - 6:00 PM',
+        'Saturday: 10:00 AM - 4:00 PM',
+        'Sunday: Closed'
+      ];
+
   const result: Partial<Professional> = {
-    // Required fields with defaults
     id: 'preview',
     name: formData.name || 'Your Name',
-    title: formData.title || 'Beauty Professional',
-    specialty: formData.specialty || 'Your Specialty',
+    title: formData.professional_title || 'Beauty Professional',        // ✅ was: title
+    specialty: formData.primary_specialty || 'Your Specialty',          // ✅ was: specialty
 
-    // Location from first location (primary)
     location: primaryLocation.address || 'Your Location',
     locationData: primaryLocation,
-
-    // Multiple locations (normalized)
     locations: normalizedLocations,
 
-    // Business info
-    business_name: formData.businessName || undefined,
+    business_name: formData.business_name || undefined,                 // ✅ was: businessName
 
-    // Contact
     email: formData.email || undefined,
     phone: formData.phone || undefined,
     website: formData.website || undefined,
-    instagram: formData.instagram || undefined,
-    tiktok: formData.tiktok || undefined,
-    bookingUrl: formData.bookingUrl || undefined,
+    instagram: formData.social_media?.instagram || undefined,           // ✅ was: instagram (top-level)
+    tiktok: formData.social_media?.tiktok || undefined,                 // ✅ was: tiktok (top-level)
+    bookingUrl: formData.booking_link || undefined,                     // ✅ was: bookingUrl
 
-    // Bio
     bio: formData.bio || 'Your professional bio will appear here...',
     description: formData.bio || undefined,
 
-    // Specialties array
     specialties: formData.specialties && formData.specialties.length > 0
       ? formData.specialties
       : ['Your specialties will appear here'],
 
-    // Default certifications for preview
     certificationLevel: 'Silver' as const,
     yearsExperience: 5,
     hasDigitalCard: true,
 
-    // Profile image (handle File, string URL, or fallback)
+    // ✅ profileImage: string | Blob | undefined → resolve to string for preview
     profileImage: formData.profileImage
-      ? (formData.profileImage instanceof File
+      ? (formData.profileImage instanceof File || formData.profileImage instanceof Blob
           ? URL.createObjectURL(formData.profileImage)
-          : formData.profileImage)
-      : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop',
+          : formData.profileImage as string)
+      : (formData.profile_image
+          ? URL.createObjectURL(formData.profile_image)
+          : 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop'),
 
-    // Gallery from form data
-    gallery: formData.gallery || [],
+    // ✅ gallery → images (File[]) converted for preview; gallery_meta provides captions
+    gallery: formData.images && formData.images.length > 0
+      ? formData.images.map((file, index) => ({
+          id: formData.gallery_meta[index]?.id || `gallery-${index}`,
+          url: URL.createObjectURL(file),
+          caption: formData.gallery_meta[index]?.caption || '',
+          type: 'image' as const,
+        }))
+      : [],
 
-    // Business hours from form or placeholder
-    businessHours: formData.businessHours && formData.businessHours.length > 0
-      ? formData.businessHours
-      : [
-          'Monday: 9:00 AM - 6:00 PM',
-          'Tuesday: 9:00 AM - 6:00 PM',
-          'Wednesday: 9:00 AM - 6:00 PM',
-          'Thursday: 9:00 AM - 6:00 PM',
-          'Friday: 9:00 AM - 6:00 PM',
-          'Saturday: 10:00 AM - 4:00 PM',
-          'Sunday: Closed'
-        ],
-
-    // Important info
-    importantInfo: formData.importantInfo && formData.importantInfo.length > 0
-      ? formData.importantInfo
+    businessHours: businessHoursStrings,                                // ✅ was: businessHours (string[])
+    importantInfo: formData.important_info && formData.important_info.length > 0
+      ? formData.important_info                                         // ✅ was: importantInfo
       : undefined,
 
-    // Defaults for preview display
     featured: false,
     isFounder: false,
     rating: 4.8,
     reviewCount: 0,
 
-    // Services placeholder from specialties
     services: formData.specialties && formData.specialties.length > 0
       ? formData.specialties.map((specialty, index) => ({
           id: `service-${index}`,
@@ -364,10 +334,7 @@ export function transformFormDataToProfessional(
         }))
       : [],
 
-    // Empty promotions (can be added later)
     promotions: [],
-
-    // Include condensed card config for preview layout
     condensedCardConfig: DEFAULT_CONDENSED_CARD_CONFIG,
   };
 
@@ -383,16 +350,12 @@ export function transformFormDataToProfessional(
 }
 
 /**
- * Clean up object URLs when component unmounts
- *
- * This prevents memory leaks from blob URLs created for file uploads
+ * Clean up object URLs when component unmounts to prevent memory leaks
  */
 export function cleanupObjectURLs(professional: Partial<Professional>) {
   if (professional.profileImage?.startsWith('blob:')) {
     URL.revokeObjectURL(professional.profileImage);
   }
-
-  // Clean up gallery images if they exist
   if (professional.gallery) {
     professional.gallery.forEach(item => {
       if (item.url?.startsWith('blob:')) {
