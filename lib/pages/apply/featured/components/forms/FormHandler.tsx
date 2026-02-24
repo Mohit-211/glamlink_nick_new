@@ -31,9 +31,10 @@ export interface FormHandlerProps {
   fieldsConfig: Record<string, any>;
   glamlinkConfig?: TabConfig;
   formData: Record<string, any>;
-  handleFieldChange: (fieldKey: string, value: any) => void;
-  handleFieldBlur?: (fieldKey: string) => void;
-  handleFieldFocus?: (fieldKey: string) => void;
+  // ✅ fieldKey widened to string | number to match field component expectations
+  handleFieldChange: (fieldKey: string | number, value: any) => void;
+  handleFieldBlur?: (fieldKey: string | number) => void;
+  handleFieldFocus?: (fieldKey: string | number) => void;
   errors: Record<string, string>;
   isLoading: boolean;
   isSubmitting: boolean;
@@ -61,28 +62,24 @@ export default function FormHandler({
   // Combine the original fields config with glamlink integration fields
   const enhancedFieldsConfig = {
     ...fieldsConfig,
-    // Add glamlink integration fields from the shared configuration
     ...glamlinkFields
   };
 
   // Combine original sections with closing layout sections
   const allSections = [...formLayout.sections, ...closingLayout.sections];
-  // Render a field based on its configuration and type
+
   const renderField = (fieldKey: string, config: any) => {
     const value = formData[fieldKey];
     const error = errors[fieldKey];
 
-    // Check if this field should be conditionally rendered
     if (conditionalFields[fieldKey] && !conditionalFields[fieldKey](formData)) {
       return null;
     }
 
-    // Check for custom field handlers
     if (customFieldHandlers[fieldKey]) {
       return customFieldHandlers[fieldKey](fieldKey, config, value, handleFieldChange, error, isLoading || isSubmitting);
     }
 
-    // Determine which field component to use based on field type
     switch (config.type) {
       case 'text':
         return (
@@ -164,7 +161,6 @@ export default function FormHandler({
         );
 
       case 'checkbox':
-        // Use simple CheckboxField for boolean checkboxes, CheckboxOptionField for multi-option checkboxes
         if (config.options && config.options.length > 0) {
           return (
             <CheckboxOptionField
@@ -263,15 +259,11 @@ export default function FormHandler({
 
   return (
     <div className="space-y-8">
-      {/* Form Header */}
       <div className="text-center">
         <h3 className="text-2xl font-bold text-gray-900 mb-4">{formLayout.title}</h3>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          {formLayout.description}
-        </p>
+        <p className="text-gray-600 max-w-2xl mx-auto">{formLayout.description}</p>
       </div>
 
-      {/* Form Sections */}
       {allSections.map((section, sectionIndex) => (
         <div key={sectionIndex} className="bg-white rounded-lg border border-gray-200 p-6">
           <h4 className="text-lg font-semibold text-gray-900 mb-2">{section.title}</h4>

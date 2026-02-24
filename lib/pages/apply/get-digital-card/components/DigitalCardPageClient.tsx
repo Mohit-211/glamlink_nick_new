@@ -54,8 +54,8 @@ export default function DigitalCardPageClient() {
       {/* Application Form with Split-View Preview */}
       <div id="digital-card-form">
         <DigitalCardFormWithPreview
-          // onSubmit={handleSubmit}
-          // isLoading={isLoading}
+          onSubmit={handleSubmit}
+          isLoading={isLoading}
         />
       </div>
 
