@@ -1,12 +1,5 @@
 'use client';
 
-/**
- * DynamicFormRenderer - Renders form sections and fields dynamically from configuration
- *
- * Takes a form configuration (sections with fields) and renders the appropriate
- * field components based on field type. Uses shared field components.
- */
-
 import React from 'react';
 import {
   TextField,
@@ -30,9 +23,9 @@ export interface DynamicFormRendererProps {
   sections: FormSectionConfig[];
   formData: Record<string, any>;
   errors: Record<string, string>;
-  onChange: (fieldKey: string, value: any) => void;
-  onBlur?: (fieldKey: string) => void;
-  onFocus?: (fieldKey: string) => void;
+  onChange: (fieldKey: string | number, value: any) => void;   // ✅ string | number
+  onBlur?: (fieldKey: string | number) => void;                // ✅ string | number
+  onFocus?: (fieldKey: string | number) => void;               // ✅ string | number
   disabled?: boolean;
   collapsible?: boolean;
 }
@@ -41,9 +34,9 @@ interface SectionProps {
   section: FormSectionConfig;
   formData: Record<string, any>;
   errors: Record<string, string>;
-  onChange: (fieldKey: string, value: any) => void;
-  onBlur?: (fieldKey: string) => void;
-  onFocus?: (fieldKey: string) => void;
+  onChange: (fieldKey: string | number, value: any) => void;   // ✅ string | number
+  onBlur?: (fieldKey: string | number) => void;                // ✅ string | number
+  onFocus?: (fieldKey: string | number) => void;               // ✅ string | number
   disabled?: boolean;
   collapsible?: boolean;
 }
@@ -56,16 +49,15 @@ function renderField(
   field: FormFieldConfig,
   formData: Record<string, any>,
   errors: Record<string, string>,
-  onChange: (fieldKey: string, value: any) => void,
-  onBlur?: (fieldKey: string) => void,
-  onFocus?: (fieldKey: string) => void,
+  onChange: (fieldKey: string | number, value: any) => void,   // ✅ string | number
+  onBlur?: (fieldKey: string | number) => void,                // ✅ string | number
+  onFocus?: (fieldKey: string | number) => void,               // ✅ string | number
   disabled?: boolean
 ): React.ReactNode {
   const fieldKey = field.name;
   const value = formData[fieldKey];
   const error = errors[fieldKey];
 
-  // Convert FormFieldConfig to the format expected by shared components
   const config = {
     type: field.type,
     label: field.label,
@@ -120,7 +112,7 @@ function renderField(
         <MultiLocationFieldWrapper
           key={fieldKey}
           value={value || []}
-          onChange={(locations) => onChange(fieldKey, locations)}
+          onChange={(locations: any) => onChange(fieldKey, locations)}
           error={error}
         />
       );
@@ -131,7 +123,7 @@ function renderField(
         <BusinessHoursField
           key={fieldKey}
           value={value || []}
-          onChange={(hours) => onChange(fieldKey, hours)}
+          onChange={(hours: any) => onChange(fieldKey, hours)}
           // @ts-expect-error - BusinessHoursField config prop type mismatch
           config={config}
         />
@@ -145,7 +137,7 @@ function renderField(
           key={fieldKey}
           label={field.label}
           value={value || []}
-          onChange={(items) => onChange(fieldKey, items)}
+          onChange={(items: any) => onChange(fieldKey, items)}
           placeholder={field.placeholder}
           maxItems={field.maxLength || 10}
           helperText={field.helperText}
@@ -154,7 +146,6 @@ function renderField(
       );
 
     default:
-      // Fallback to text field for unknown types
       return <TextField key={fieldKey} {...baseProps} />;
   }
 }
@@ -175,12 +166,10 @@ function FormSection({
 }: SectionProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
-  // Sort fields by order
   const sortedFields = [...(section.fields || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
-      {/* Section Header */}
       <div
         className={`px-6 py-4 bg-gray-50 border-b border-gray-200 ${collapsible ? 'cursor-pointer hover:bg-gray-100' : ''}`}
         onClick={collapsible ? () => setIsCollapsed(!isCollapsed) : undefined}
@@ -211,7 +200,6 @@ function FormSection({
         </div>
       </div>
 
-      {/* Section Fields */}
       {!isCollapsed && (
         <div className="p-6">
           {/* @ts-expect-error - Layout type comparison */}
@@ -242,7 +230,6 @@ export default function DynamicFormRenderer({
   disabled = false,
   collapsible = false
 }: DynamicFormRendererProps) {
-  // Sort sections by order
   const sortedSections = [...sections].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
