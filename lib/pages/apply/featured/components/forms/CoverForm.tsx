@@ -7,9 +7,9 @@ import FormHandler from "./FormHandler";
 
 interface CoverFormProps {
   formData: GetFeaturedFormData;
-  handleFieldChange: (fieldKey: string, value: any) => void;
-  handleFieldBlur?: (fieldKey: string) => void;
-  handleFieldFocus?: (fieldKey: string) => void;
+  handleFieldChange: (fieldKey: string | number, value: any) => void;
+  handleFieldBlur?: (fieldKey: string | number) => void;
+  handleFieldFocus?: (fieldKey: string | number) => void;
   errors: Record<string, string>;
   isLoading: boolean;
   isSubmitting: boolean;
@@ -29,11 +29,9 @@ export default function CoverForm({
   glamlinkConfig
 }: CoverFormProps) {
   const formLayout = getFormLayout('cover');
-  // Use provided config or fall back to static config
   const coverFields = fieldsConfig || staticFieldsLayout.cover;
   const glamlinkFields = glamlinkConfig || staticFieldsLayout.glamlinkIntegration;
 
-  // Define conditional fields
   const conditionalFields = {
     promotionDetails: (data: Record<string, any>) => data.promotionOffer === true,
     contentPlanningDate: (data: Record<string, any>) => data.contentPlanningRadio === 'schedule-day',
@@ -46,9 +44,9 @@ export default function CoverForm({
       fieldsConfig={coverFields}
       glamlinkConfig={glamlinkFields}
       formData={formData}
-      handleFieldChange={handleFieldChange}
-      handleFieldBlur={handleFieldBlur}
-      handleFieldFocus={handleFieldFocus}
+      handleFieldChange={handleFieldChange}  
+      handleFieldBlur={handleFieldBlur}      
+      handleFieldFocus={handleFieldFocus}     
       errors={errors}
       isLoading={isLoading}
       isSubmitting={isSubmitting}

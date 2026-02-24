@@ -7,9 +7,9 @@ import FormHandler from "./FormHandler";
 
 interface RisingStarFormProps {
   formData: GetFeaturedFormData;
-  handleFieldChange: (fieldKey: string, value: any) => void;
-  handleFieldBlur?: (fieldKey: string) => void;
-  handleFieldFocus?: (fieldKey: string) => void;
+ handleFieldChange: (fieldKey: string | number, value: any) => void;
+  handleFieldBlur?: (fieldKey: string | number) => void;
+  handleFieldFocus?: (fieldKey: string | number) => void;
   errors: Record<string, string>;
   isLoading: boolean;
   isSubmitting: boolean;
